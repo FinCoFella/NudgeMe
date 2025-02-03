@@ -1,87 +1,147 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style type="text/css">
-            @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap'); /* Import Questrial font */
-
-            .navbar {
-                background: white; /* Switch to white background */
-                padding: 10px; /* Adjust padding to make navbar more compact */
-                border-radius: 10px;
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+        <title>NudgeMe</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+    
+            /* General Styles */
+            body {
+                font-family: 'Questrial', sans-serif;
+                text-align: center;
+                padding: 20px;
+                background-color: white;
             }
+    
+            h2 {
+                color: #00aeef;
+            }
+    
+            /* Navbar Styles */
+            .navbar {
+                background: white;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+    
             .navdiv {
                 display: flex;
                 align-items: center;
-                justify-content: center; /* Center the menu list */
+                justify-content: center;
             }
+    
             ul {
                 margin: 0;
                 padding: 0;
             }
+    
             li {
                 list-style: none;
                 display: inline-block;
                 position: relative;
             }
+    
             li a {
-                font-family: 'Questrial', sans-serif; /* Set font to Questrial */
-                color: #00aeef; /* Switch to navbar's blue color */
-                font-size: 18px; /* Reduce font size */
-                font-weight: normal; /* Set font weight to normal */
+                font-family: 'Questrial', sans-serif;
+                color: #00aeef;
+                font-size: 18px;
+                font-weight: normal;
                 margin-right: 20px;
                 text-decoration: none;
-                line-height: 1.2; /* Adjust line-height to minimize vertical spacing */
-                padding: 5px 0; /* Minimize padding above and below */
+                padding: 5px 0;
             }
+    
             li a:hover {
-                color: #00395d; /* Darker shade for hover effect */
+                color: #00395d;
             }
-            /* Dropdown styles */
+    
+            /* Dropdown Styles */
             .dropdown {
                 display: none;
                 position: absolute;
                 top: 100%;
                 left: 0;
-                background-color: #00aeef; /* Switch to navbar's blue color */
+                background-color: #00aeef;
                 min-width: 150px;
                 border-radius: 5px;
                 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             }
+    
             .dropdown li {
                 display: block;
                 margin: 0;
-                position: relative; /* Required for nested dropdowns */
+                position: relative;
             }
+    
             .dropdown li a {
-                font-family: 'Questrial', sans-serif; /* Ensure dropdown uses Questrial font */
-                color: white; /* White for dropdown items */
-                font-weight: normal; /* Normal font weight */
-                font-size: 14px; /* Slightly smaller font size for dropdown items */
-                padding: 8px 15px; /* Compact padding for dropdown items */
+                font-family: 'Questrial', sans-serif;
+                color: white;
+                font-size: 14px;
+                padding: 8px 15px;
                 display: block;
             }
+    
             .dropdown li a:hover {
-                background-color: #00395d; /* Darker blue for hover effect */
+                background-color: #00395d;
                 color: white;
             }
-            /* Show dropdown on hover */
+    
+            /* Show Dropdown on Hover */
             li:hover .dropdown {
                 display: block;
             }
-            /* Nested dropdown styles */
+    
+            /* Nested Dropdown */
             .dropdown .nested-dropdown {
                 display: none;
                 position: absolute;
                 top: 0;
-                left: 100%; /* Align nested dropdown to the right of its parent */
-                background-color: #00aeef; /* Switch to navbar's blue color */
+                left: 100%;
+                background-color: #00aeef;
                 min-width: 150px;
                 border-radius: 5px;
                 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             }
+    
             .dropdown li:hover .nested-dropdown {
                 display: block;
+            }
+    
+            /* Expense Analysis Styles */
+            .container {
+                max-width: 600px;
+                margin: auto;
+                padding: 20px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+    
+            .upload-btn {
+                background: #00aeef;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+    
+            .upload-btn:hover {
+                background: #00395d;
+            }
+    
+            .analysis-box {
+                margin-top: 20px;
+                padding: 15px;
+                background: #f9f9f9;
+                border-radius: 5px;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             }
         </style>
     </head>
@@ -95,5 +155,15 @@
                 </ul>
             </div>
         </nav>
+        <div class="container">
+            <form action="/" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv">
+                <button type="submit" class="upload-btn">Upload & Analyze</button>
+            </form>
+            <div class="analysis-box">
+                <h3>Expense Analysis</h3>
+                <p>{{ analysis }}</p>
+            </div>
+        </div>
     </body>
 </html>
