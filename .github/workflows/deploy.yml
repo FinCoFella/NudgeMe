@@ -22,14 +22,22 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 65002 -H 147.93.42.198 >> ~/.ssh/known_hosts
+
       - name: Deploy to Hostinger via SSH
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          ssh u866892645@147.93.42.198 << 'EOF'
+          ssh -p 65002 u866892645@147.93.42.198 << 'EOF'
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > ~/your-app/.env
           EOF
 
       - name: Restart Application
         run: |
-          ssh u866892645@147.93.42.198 'systemctl restart your-app-service'
+          ssh -p 65002 u866892645@147.93.42.198 'systemctl restart your-app-service'
+
