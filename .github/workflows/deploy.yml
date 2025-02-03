@@ -26,10 +26,10 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          ssh user@hostinger-server << 'EOF'
+          ssh u866892645@147.93.42.198 << 'EOF'
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > ~/your-app/.env
           EOF
 
       - name: Restart Application
         run: |
-          ssh user@hostinger-server 'systemctl restart your-app-service'
+          ssh u866892645@147.93.42.198 'systemctl restart your-app-service'
