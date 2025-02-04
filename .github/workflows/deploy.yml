@@ -18,10 +18,6 @@ jobs:
         with:
           python-version: "3.12.3"  # Adjust based on your project
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -34,21 +30,39 @@ jobs:
           ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 "echo '✅ SSH connection successful!'"
 
       - name: Deploy to Hostinger via SSH
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 << 'EOF'
-          mkdir -p ~/your-app  # ✅ Ensure the directory exists
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > ~/your-app/.env
-          EOF
+          # ✅ Navigate to home directory
+          cd ~
 
-      - name: Restart Application (Fix)
-        run: |
-          ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 << 'EOF'
-          cd ~/your-app  # ✅ Move to the correct project directory
-          source ~/.venv/bin/activate  # ✅ Activate virtual environment (if using one)
-          pkill -f "flask run" || true  # ✅ Stop existing Flask app
-          nohup flask run --host=0.0.0.0 --port=5000 &  # ✅ Restart Flask app
+          # ✅ Clone repo if it doesn't exist
+          if [ ! -d "your-app" ]; then
+            git clone https://github.com/FinCoFella/NudgeMe.git your-app
+          fi
+
+          # ✅ Pull latest changes
+          cd your-app
+          git reset --hard
+          git pull origin main
+
+          # ✅ Set up virtual environment
+          python3 -m venv .venv
+          source .venv/bin/activate && pip install -r requirements.txt
+
+          # ✅ Ensure OpenAI API key is set
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+
+          # ✅ Ensure uploads folder exists
+          mkdir -p uploads
+          chmod 777 uploads
+
+          # ✅ Stop any running Flask or Gunicorn processes
+          pkill -f "flask run" || true
+          pkill -f "gunicorn" || true
+
+          # ✅ Start Flask in Background
+          nohup bash -c 'source .venv/bin/activate && flask run --host=0.0.0.0 --port=5000' &
+
           EOF
 
 
