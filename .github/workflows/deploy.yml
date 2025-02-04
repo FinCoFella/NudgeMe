@@ -42,12 +42,15 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > ~/your-app/.env
           EOF
 
-      - name: Restart Application (Alternative)
+      - name: Restart Application (Fix)
         run: |
           ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 << 'EOF'
-          pkill -f "gunicorn" || true  # ✅ Stop the existing process safely
-          nohup gunicorn -w 3 app:app --bind 0.0.0.0:5000 --daemon  # ✅ Restart it
+          cd ~/your-app  # ✅ Move to the correct project directory
+          source ~/.venv/bin/activate  # ✅ Activate virtual environment (if using one)
+          pkill -f "flask run" || true  # ✅ Stop existing Flask app
+          nohup flask run --host=0.0.0.0 --port=5000 &  # ✅ Restart Flask app
           EOF
+
 
 
 
