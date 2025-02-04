@@ -42,8 +42,12 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > ~/your-app/.env
           EOF
 
-      - name: Restart Application
+      - name: Restart Application (Alternative)
         run: |
-          ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 'systemctl restart your-app-service'
+          ssh -o StrictHostKeyChecking=no -p 65002 u866892645@147.93.42.198 << 'EOF'
+          pkill -f "gunicorn" || true  # ✅ Stop the existing process safely
+          nohup gunicorn -w 3 app:app --bind 0.0.0.0:5000 --daemon  # ✅ Restart it
+          EOF
+
 
 
