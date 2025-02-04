@@ -45,9 +45,14 @@ jobs:
           git reset --hard
           git pull origin main
 
-          # ✅ Set up virtual environment
+          # ✅ Ensure Python venv package is installed (without sudo)
+          if ! command -v python3 -m venv &> /dev/null; then
+            apt update && apt install -y python3-venv
+          fi
+
+          # ✅ Create and activate virtual environment
           python3 -m venv .venv
-          source .venv/bin/activate && pip install -r requirements.txt
+          bash -c 'source .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt'
 
           # ✅ Ensure OpenAI API key is set
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
@@ -59,6 +64,7 @@ jobs:
           # ✅ Stop any running Flask or Gunicorn processes
           pkill -f "flask run" || true
           pkill -f "gunicorn" || true
+          sleep 2
 
           # ✅ Start Flask in Background
           nohup bash -c 'source .venv/bin/activate && flask run --host=0.0.0.0 --port=5000' &
