@@ -111,6 +111,7 @@ def index():
         if file:
             # Save file safely
             file_path = os.path.join(UPLOAD_FOLDER, "uploaded_expense.csv")
+            print(f"📂 Saving file to: {file_path}")  # Debugging log
             file.save(file_path)
 
             # Process the uploaded file
