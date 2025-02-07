@@ -1,9 +1,17 @@
 from flask import Flask, request, render_template
 from dotenv import load_dotenv
+from google.cloud import secretmanager
 import pandas as pd
 import openai
 import os
 import chardet
+
+def get_secret(secret_name):
+    client = secretmanager.SecretManagerServiceClient()
+    project_id = "nudgemeai"  # Make sure this is your actual project ID
+    secret_path = f"projects/{project_id}/secrets/{secret_name}/versions/latest"
+    response = client.access_secret_version(request={"name": secret_path})
+    return response.payload.data.decode("UTF-8")
 
 openai_api_key=os.getenv("OPENAI_API_KEY")
 
