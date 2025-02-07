@@ -13,8 +13,7 @@ def get_secret(secret_name):
     response = client.access_secret_version(request={"name": secret_path})
     return response.payload.data.decode("UTF-8")
 
-openai_api_key=os.getenv("OPENAI_API_KEY")
-
+openai_api_key=get_secret("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=openai_api_key)
 app = Flask(__name__, template_folder=".")
 
