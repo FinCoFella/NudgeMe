@@ -5,14 +5,13 @@ import openai
 import os
 import chardet
 
-load_dotenv()
 openai_api_key=os.getenv("OPENAI_API_KEY")
 
-client = openai.OpenAI(api_key=openai_api_key) 
+client = openai.OpenAI(api_key=openai_api_key)
 app = Flask(__name__, template_folder=".")
 
 # Define and create upload folder
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+UPLOAD_FOLDER = "/tmp"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure folder exists
 
 # Function to detect file encoding
@@ -110,9 +109,9 @@ def index():
 
         if file:
             # Save file safely
-            file_path = os.path.join(UPLOAD_FOLDER, "uploaded_expense.csv")
-            print(f"📂 Saving file to: {file_path}")  # Debugging log
+            file_path = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(file_path)
+            print(f"📂 File saved to: {file_path}")  # Debugging log
 
             # Process the uploaded file
             analysis = analyze_expenses(file_path)

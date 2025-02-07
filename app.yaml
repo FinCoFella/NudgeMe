@@ -1,0 +1,22 @@
+runtime: python312  # Ensure this matches your Python version
+
+entrypoint: gunicorn -b :$PORT main:app  # Run Flask with Gunicorn
+
+instance_class: F1  # Smallest, cheapest instance type
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 5
+
+# Secure API keys using Secret Manager
+env_variables:
+  OPENAI_API_KEY: "{{secret:OPENAI_API_KEY}}"  # Securely store API keys
+
+handlers:
+  - url: /static
+    static_dir: static  # Serve static files if needed
+
+  - url: /.*
+    script: auto  # Direct all other traffic to Flask app
+
